@@ -1,5 +1,5 @@
-const moment  = module.require("moment-timezone");
-const config  = module.require("../config.json");
+const moment = module.require("moment-timezone");
+const config = module.require("../config.json");
 const Discord = module.require("discord.js");
 const request = module.require("request");
 
@@ -8,7 +8,7 @@ module.exports.run = async (bot, message, args)  => {
         await message.channel.send(
             new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setTitle("You can't use this command in other server.")
+            .setDescription(`**<@${message.author.id}>, ${config.notofficial}**`)
         );
         return;
     }
@@ -39,7 +39,7 @@ module.exports.run = async (bot, message, args)  => {
 }
 
 module.exports.help = {
-    name: "online",
-    desc: "How many players currently online.",
-    category: "general"
+    name: `online`,
+    desc: `- Check how many players online in the server.`,
+    category: `official`
 }

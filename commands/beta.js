@@ -1,5 +1,5 @@
-const moment  = module.require("moment-timezone");
-const config  = module.require("../config.json");
+const moment = module.require("moment-timezone");
+const config = module.require("../config.json");
 const Discord = module.require("discord.js");
 
 module.exports.run = async (bot, message, args)  => {
@@ -7,33 +7,28 @@ module.exports.run = async (bot, message, args)  => {
         await message.channel.send(
             new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setTitle("You can't use this command in other server.")
+            .setDescription(`**<@${message.author.id}>, ${config.notofficial}**`)
         );
         return;
     }
 
-    const helpname = this.help.name;
-    let betalist = message.guild.roles.get(`478820384720814100`).members.map(m => m.user.id);
-    let betatesters = "";
+    const betalist = message.guild.roles.get(`478820384720814100`).members.map(m => m.user.tag);
+    const betatesters = [];
 
-    for (let i = 0; i < betalist.length; i++) {
-        betatesters += `<@${betalist[i]}>`;
-        if (i < betalist.length - 1) betatesters += ', ';
-    }
+    for (const list of betalist) betatesters.push(` ${list}`);
 
     await message.channel.send(
         new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
-        .setDescription("**Server is currently on Beta Testing Phase**")
-        .addField("Beta Testers", `${betatesters}`)
-        .addField("Total", `${betalist.length}`)
-        .setFooter(`${config.prefix}${helpname} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
+        .addField(`Beta Testers`, `${betatesters.sort()}`)
+        .addField(`Total Beta Testers`, `${betatesters.length}`)
+        .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
     );
     return;
 }
 
 module.exports.help = {
-    name: "beta",
-    desc: "About the beta testing phase",
-    category: "general"
+    name: `beta`,
+    desc: `- About the beta testing phase.`,
+    category: `official`
 }

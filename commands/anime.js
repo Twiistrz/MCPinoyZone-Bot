@@ -3,9 +3,10 @@ const Discord = module.require(`discord.js`);
 const Kaori = module.require(`kaori`);
 const moment = module.require(`moment-timezone`);
 const kaori = new Kaori();
-const sites = [`safebooru`,`lolibooru`,`booru`,`danbooru`,`konachan`,`yandere`,`gelbooru`,`rule34`,`tbib`,`xbooru`,`youhateus`]
+const sites = [`safebooru`,`lolibooru`,`danbooru`,`konachan`,`yandere`,`gelbooru`,`rule34`,`tbib`,`xbooru`,`youhateus`]
 
 module.exports.run = async (bot, message, args)  => {
+    // 198684730978336769 - dullus
     if (message.author.id === 198684730978336769) return;
     const helpname = this.help.name;
     if (message.guild.id === config.officialguildID) {
@@ -15,16 +16,16 @@ module.exports.run = async (bot, message, args)  => {
                 .setColor(`#${config.colorInfo}`)
                 .setDescription(`Use this command in <#${config.nsfwchannelID}>`)
                 .setFooter(`${config.prefix}${helpname} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-            );
+            ).catch(err => console.error(err));
             return;
         }
     }
 
-    let keyword = args.slice(1);
+    let keyword = args;
     if (keyword[0]) {
         let site = keyword[0].toLowerCase();
         if (sites.indexOf(site) > -1) {
-            keyword = args.slice(2).join(` `);
+            keyword = args.slice(1).join(` `);
             kaori.search(site, { tags: [keyword], limit: 1, random: true })
             .then(async (images) => await message.channel
                 .send(
@@ -192,6 +193,6 @@ module.exports.run = async (bot, message, args)  => {
 
 module.exports.help = {
     name: `anime`,
-    desc: `Send random anime picture.`,
+    desc: `\`${config.prefix}help anime\` - Send random anime picture.`,
     category: `fun`
 }

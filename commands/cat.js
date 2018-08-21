@@ -29,7 +29,7 @@ module.exports.run = async (bot, message, args)  => {
 }
 
 module.exports.help = {
-    name: "cat",
-    desc: "Send random cat image.",
-    category: "fun"
+    name: `cat`,
+    desc: `- Send random cat image.`,
+    category: `fun`
 }

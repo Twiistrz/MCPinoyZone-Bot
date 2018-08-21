@@ -1,5 +1,5 @@
-const moment  = module.require("moment-timezone");
-const config  = module.require("../config.json");
+const moment = module.require("moment-timezone");
+const config = module.require("../config.json");
 const Discord = module.require("discord.js");
 
 module.exports.run = async (bot, message, args)  => {
@@ -7,7 +7,7 @@ module.exports.run = async (bot, message, args)  => {
         await message.channel.send(
             new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setTitle("Sorry, you're not my creator!")
+            .setTitle(`Sorry, you're not my creator!`)
         );
         return;
     }
@@ -25,27 +25,26 @@ module.exports.run = async (bot, message, args)  => {
     let restarting = await message.channel.send(
         new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
-        .setTitle("Bot Restarting. . .")
+        .setTitle(`Bot Restarting. . .`)
         .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
     );
 
     await bot.destroy()
+    .then(() => bot.login(process.env.TOKEN).catch(err => console.log(err)))
+    .then(() => restarting.delete().catch(err => console.log(err)))
     .then(() => 
-        bot.login(process.env.TOKEN)
-        .catch(() => console.log("\nERROR: Can't reach the bot.\n"))
-    )
-    .then(() => restarting.delete().catch(() => {}))
-    .then(() => message.channel.send(
-        new Discord.RichEmbed()
-        .setColor(`#${config.colorSuccess}`)
-        .setTitle("Bot Restarted!")
-        .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-    ));
+        message.channel.send(
+            new Discord.RichEmbed()
+            .setColor(`#${config.colorSuccess}`)
+            .setTitle(`Bot Restarted!`)
+            .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
+        ).catch(err => console.log(err))
+    );
     return;
 }
 
 module.exports.help = {
-    name: "restart",
-    desc: "Restart the bot",
-    category: "admin"
+    name: `restart`,
+    desc: `- Restart the bot`,
+    category: `admin`
 }

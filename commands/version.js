@@ -1,9 +1,18 @@
-const config  = module.require("../config.json");
+const config = module.require("../config.json");
 const Discord = module.require("discord.js");
 const request = module.require("request");
-const moment  = module.require("moment-timezone");
+const moment = module.require("moment-timezone");
 
 module.exports.run = async (bot, message, args)  => {
+    if (message.guild.id != config.officialguildID) {
+        await message.channel.send(
+            new Discord.RichEmbed()
+            .setColor(`#${config.colorDanger}`)
+            .setDescription(`**<@${message.author.id}>, ${config.notofficial}**`)
+        );
+        return;
+    }
+
     const helpname = this.help.name;
     request(`http://mcapi.us/server/status?ip=${config.ip}`, async function(err, response, body) {
         if (err) return;
@@ -12,7 +21,7 @@ module.exports.run = async (bot, message, args)  => {
                 new Discord.RichEmbed()
                 .setAuthor(message.author.tag, message.author.displayAvatarURL)
                 .setColor(`#${config.colorDanger}`)
-                .setTitle("API is currently offline. Try again later.")
+                .setTitle(`API is currently offline. Try again later.`)
                 .setFooter(`${config.prefix}${helpname} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
             );
         } else {
@@ -21,7 +30,7 @@ module.exports.run = async (bot, message, args)  => {
                 new Discord.RichEmbed()
                 .setAuthor(message.author.tag, message.author.displayAvatarURL)
                 .setColor(`#${(body.online) ? config.colorInfo : config.colorDanger}`)
-                .setTitle((body.online) ? `Server supports **${body.server.name}**` : "Server is currently offline. Try again later.")
+                .setTitle((body.online) ? `Server supports **${body.server.name}**` : `Server is currently offline. Try again later.`)
                 .setFooter(`${config.prefix}${helpname} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
             );
         }
@@ -30,7 +39,7 @@ module.exports.run = async (bot, message, args)  => {
 }
 
 module.exports.help = {
-    name: "version",
-    desc: "Check supported version of minecraft.",
-    category: "general"
+    name: `version`,
+    desc: `- Check supported version.`,
+    category: `official`
 }

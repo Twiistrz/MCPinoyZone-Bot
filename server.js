@@ -5,25 +5,14 @@ const request = module.require(`request`);
 const fs = module.require(`fs`);
 const bot = new Discord.Client();
 const swearWords = [`homo`,`fuk`,`bakla`,`gago`,`tangina`,`puta`,`fuck`,`darn`,`shit`,`dick`,`asshole`,`bastard`,`bitch`,`damn`,`cunt`,`noob`];
+const commandFiles = fs.readdirSync(`./commands`).filter(file => file.endsWith(`.js`));
 
 bot.commands = new Discord.Collection();
 
-fs.readdir(`./commands/`, (err, files) => {
-	if (err) return;
-
-	let jsfiles = files.filter(f => f.split(".").pop() === "js");
-	if (jsfiles.length <= 0) {
-		console.log(`No commands to load!`);
-		return;
-	}
-
-	console.log(`Loading ${jsfiles.length} commands!`);
-	jsfiles.forEach((f, i) => {
-		let props = module.require(`./commands/${f}`);
-		console.log(`${i + 1}: ${f} loaded`);
-		bot.commands.set(props.help.name, props);
-	});
-});
+for (const file of commandFiles) {
+	const command = module.require(`./commands/${file}`);
+	bot.commands.set(command.help.name, command);
+}
 
 bot.on(`ready`, () => {
 	moment.tz.setDefault(config.timezone);
@@ -57,15 +46,13 @@ bot.on(`guildDelete`, async (guild) => {
 });
 
 bot.on(`messageDelete`, async (message) => {
-	if (message.author.bot) return;
-	if (message.channel.type === `dm`) return;
+	if (message.author.bot || message.channel.type === `dm`) return;
 
 	if (swearWords.some(word => message.content.includes(word)) && message.guild.id === config.officialguildID) {
 		console.log(`Deleted: ${message.cleanContent}`);
 		bot.channels.get(config.logchannelID).send(
 			new Discord.RichEmbed()
 			.setColor(`#${config.colorDanger}`)
-			.setAuthor(message.author.tag, message.author.displayAvatarURL)
 			.setDescription(`**Message sent by <@${message.author.id}> deleted in <#${message.channel.id}>**\n${message.cleanContent}`)
 			.addField(`Reason`, `Swearing`)
 			.setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
@@ -75,6 +62,8 @@ bot.on(`messageDelete`, async (message) => {
 });
 
 bot.on(`messageUpdate`, async (oldMessage, message) => {
+	if (message.author.bot || message.channel.type === `dm`) return;
+
 	if (swearWords.some(word => message.content.includes(word))) {
 		await message.delete().catch(() => {});
 		return;
@@ -82,20 +71,16 @@ bot.on(`messageUpdate`, async (oldMessage, message) => {
 });
 
 bot.on(`message`, async (message) => {
-	if (message.author.bot) return;
-	if (message.channel.type === `dm`) return;
 	if (swearWords.some(word => message.content.includes(word))) {
-		await message.delete().catch(() => {});
-		return;
+		await message.delete().catch(err => console.log(err));
+		return;	
 	}
 
-	if (!message.content.startsWith(config.prefix)) return;
-	
-	let args = message.content.split(` `);
-	let command = args[0];
-	let cmd = bot.commands.get(command.slice(config.prefix.length))
-	
-	if (cmd) cmd.run(bot, message, args);
+	if (!message.content.startsWith(config.prefix) || message.author.bot || message.channel.type === `dm`) return;
+
+	const arg = message.content.slice(config.prefix.length).split(` `);
+	const cmd = bot.commands.get(arg[0]);
+	if (cmd) cmd.run(bot, message, arg.slice(1));
 });
 
 bot.login(process.env.TOKEN);

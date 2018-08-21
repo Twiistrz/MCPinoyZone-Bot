@@ -12,18 +12,17 @@ module.exports.run = async (bot, message, args)  => {
         return;
     }
     
-    const helpname = this.help.name;
     await message.channel.send(
         new Discord.RichEmbed()
         .setColor(`#${(config.application) ? config.colorInfo : config.colorDanger}`)
         .setTitle((config.application) ? `Message any staff online, we're hiring!` : `Sorry, we're not looking for staff yet.`)
-        .setFooter(`${config.prefix}${helpname} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
+        .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
     );
     return;
 }
 
 module.exports.help = {
     name: `apply`,
-    desc: `Are we accepting any staff? :thinking:`,
-    category: `general`
+    desc: `- Are we accepting any staff? :thinking:`,
+    category: `official`
 }
