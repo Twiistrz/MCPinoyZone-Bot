@@ -1,0 +1,21 @@
+{ 
+    "prefix": ";",
+    "colorInfo": "feca57",
+    "colorSuccess": "1dd1a1",
+    "colorDanger": "ff6b6b",
+    "ip": "beta.mcpinoyzone.com",
+    "serverkey": "rIDtsXhReeT2BtMv3x55ZURXa0gRdOMw8o4", 
+    "invitelink": "https://discord.gg/hXU4uGV",
+    "application": false,
+    "timezone": "ASIA/MANILA",
+    "timeformat": "MMM DD, YYYY hh:mmA",
+    "creatorTag": "_Twiistrz#8016",
+    "creatorID": "266897885533175808",
+    "bcchannelID": "466401200544415757",
+    "logchannelID": "480186306467594250",
+    "botchannelID": "472716312104140827",
+    "nsfwchannelID": "480711619807150090",
+    "testchannelID": "480144364891406347",
+    "officialguildID": "465805443139371019",
+    "notofficial": "You can't use this command in this server."
+}
