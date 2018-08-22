@@ -1,20 +1,17 @@
-const moment  = module.require("moment-timezone");
-const config  = module.require("../config.json");
 const Discord = module.require("discord.js");
 
-module.exports.run = async (bot, message, args)  => { 
-    await message.channel.send(
-        new Discord.RichEmbed()
-        .setAuthor(message.author.tag, message.author.displayAvatarURL)
-        .setColor(`#${config.colorInfo}`)
-        .setTitle(`Discord invite link: ${config.invitelink}`)
-        .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-    );
+module.exports.execute = async (bot, message, content, config, moment, request) => {
+    let inviteEmbed = new Discord.RichEmbed()
+        .setColor(`#${config.colorInfo}`)    
+        .setDescription(`**MCPZ Discord invite link: ${config.inviteLink}**`)
+        .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
+    await message.channel.send(inviteEmbed).catch(O_o => {});
     return;
 }
 
 module.exports.help = {
-    name: `invite`,
-    desc: `- Invite link for MCPinoyZone server.`,
-    category: `general`
+    name: "invite",
+    usage: false,
+    category: "general",
+    description: "View invite link for MCPinoyZone Server."
 }

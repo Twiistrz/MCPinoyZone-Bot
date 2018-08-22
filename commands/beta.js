@@ -1,34 +1,29 @@
-const moment = module.require("moment-timezone");
-const config = module.require("../config.json");
 const Discord = module.require("discord.js");
 
-module.exports.run = async (bot, message, args)  => {
-    if (message.guild.id != config.officialguildID) {
-        await message.channel.send(
-            new Discord.RichEmbed()
+module.exports.execute = async (bot, message, content, config, moment, request) => {
+    if (message.guild.id != config.officialGuildID) {
+        let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.notofficial}**`)
-        );
+            .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
+        await message.channel.send(errorEmbed).catch(O_o => {});
         return;
     }
 
-    const betalist = message.guild.roles.get(`478820384720814100`).members.map(m => m.user.tag);
-    const betatesters = [];
-
-    for (const list of betalist) betatesters.push(` ${list}`);
-
-    await message.channel.send(
-        new Discord.RichEmbed()
+    const betaList = message.guild.roles.get("478820384720814100").members.map(member => member.user.tag);
+    const betaTesters = [];
+    for (const member of betaList) betaTesters.push(member);
+    let betaEmbed = new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
-        .addField(`Beta Testers`, `${betatesters.sort()}`)
-        .addField(`Total Beta Testers`, `${betatesters.length}`)
-        .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-    );
+        .addField("Beta Testers", betaTesters.sort())
+        .addField("Total Beta Testers", betaTesters.length)
+        .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`)
+    await message.channel.send(betaEmbed).catch(O_o => {});
     return;
 }
 
 module.exports.help = {
-    name: `beta`,
-    desc: `- About the beta testing phase.`,
-    category: `official`
+    name: "beta",
+    usage: false,
+    category: "official",
+    description: "View info about our beta testing phase."
 }

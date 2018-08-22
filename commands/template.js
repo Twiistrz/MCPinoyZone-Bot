@@ -1,6 +1,8 @@
 const Discord = module.require("discord.js");
 
 module.exports.execute = async (bot, message, content, config, moment, request) => {
+    await message.channel.send("Hello! Im a template command file.").catch(O_o => {});
+
     if (message.guild.id != config.officialGuildID) {
         let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
@@ -9,17 +11,17 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         return;
     }
 
-    let ipEmbed = new Discord.RichEmbed()
+    let usageEmbed = new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
-        .setDescription(`Server IP: **${config.ip}**`)
-        .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
-    await message.channel.send(ipEmbed).catch(O_o => {});
+        .setTitle(`Correct usage for ${config.prefix}${this.help.name} command.`)
+        .setDescription(`\`${config.prefix}${this.help.name} ${this.help.usage}\` - *${this.help.description}*`);
+    await message.channel.send(usageEmbed).catch(O_o => {});
     return;
 }
 
 module.exports.help = {
-    name: "ip",
+    name: "template",
     usage: false,
-    category: "official",
-    description: "View the Server IP of MCPinoyZone."
+    category: "template",
+    description: "Im a template file..."
 }

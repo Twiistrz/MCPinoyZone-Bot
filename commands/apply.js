@@ -1,28 +1,25 @@
-const config = module.require(`../config.json`);
-const Discord = module.require(`discord.js`);
-const moment = module.require(`moment-timezone`);
+const Discord = module.require("discord.js");
 
-module.exports.run = async (bot, message, args)  => {
-    if (message.guild.id != config.officialguildID) {
-        await message.channel.send(
-            new Discord.RichEmbed()
+module.exports.execute = async (bot, message, content, config, moment, request) => {
+    if (message.guild.id != config.officialGuildID) {
+        let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.notofficial}**`)
-        );
+            .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
+        await message.channel.send(errorEmbed).catch(O_o => {});
         return;
     }
-    
-    await message.channel.send(
-        new Discord.RichEmbed()
-        .setColor(`#${(config.application) ? config.colorInfo : config.colorDanger}`)
-        .setTitle((config.application) ? `Message any staff online, we're hiring!` : `Sorry, we're not looking for staff yet.`)
-        .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-    );
+
+    let applyEmbed = new Discord.RichEmbed()
+        .setColor(`#${(config.acceptingApplicants) ? config.colorInfo : config.colorDanger}`)
+        .setDescription(`<@${message.author.id}> ${(config.acceptingApplicants) ? "Yes, we're accepting applicants." : "Sorry, we're not looking for staff!"}`)
+        .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`)
+    await message.channel.send(applyEmbed).catch(O_o => {});
     return;
 }
 
 module.exports.help = {
-    name: `apply`,
-    desc: `- Are we accepting any staff? :thinking:`,
-    category: `official`
+    name: "apply",
+    usage: false,
+    category: "official",
+    description: "Are we accepting any staff?"
 }

@@ -1,45 +1,40 @@
-const config = module.require("../config.json");
 const Discord = module.require("discord.js");
-const moment = module.require("moment-timezone");
 
-module.exports.run = async (bot, message, args)  => {
-    let helpname = this.help.name;
-    let user = args;
+module.exports.execute = async (bot, message, content, config, moment, request) => {
+    let helpName = this.help.name;
+    let helpUsage = this.help.usage;
+    let helpDescription = this.help.description;
     var username, avatar;
-
-    if (user[0]) {
+    if (content[0])  {
         try {
             if (message.mentions.users.first()) {
                 username = message.mentions.users.first().username;
                 avatar = message.mentions.users.first().displayAvatarURL;
             } else {
-                username = bot.users.find(u => u.username === user[0]).username;
-                avatar = bot.users.find(u => u.username === user[0]).displayAvatarURL;
+                username = bot.users.find(member => member.username === content[0]).username;
+                avatar = bot.users.find(member => member.username === content[0]).displayAvatarURL;
             }
         } catch(e) {
-            await message.channel.send(
-                new Discord.RichEmbed()
-                .setColor(`#${config.colorDanger}`)
-                .setTitle(`Correct usage for '${config.prefix}${helpname}' command.`)
-                .setDescription(`${config.prefix}${helpname} - Display own avatar\n${config.prefix}${helpname} <user> - Display other user's avatar`)
-                .setFooter(`${config.prefix}help <${helpname}> • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-            );
+            let usageEmbed = new Discord.RichEmbed()
+                .setColor(`#${config.colorInfo}`)
+                .setTitle(`Correct usage for ${config.prefix}${helpName} command.`)
+                .setDescription(`\`${config.prefix}${helpName} ${helpUsage}\` - *${helpDescription}*`);
+            await message.channel.send(usageEmbed).catch(O_o => {});
             return;
         }
     }
 
-    await message.channel.send(
-        new Discord.RichEmbed()
+    let avatarEmbed = new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
         .setTitle(`${(username) ? username : message.author.username}'s Avatar`)
-        .setImage(`${(avatar) ? avatar : message.author.displayAvatarURL}`)
-        .setFooter(`${config.prefix}${helpname} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-    );
+        .setImage(`${(avatar) ? avatar : message.author.displayAvatarURL}`);
+    await message.channel.send(avatarEmbed).catch(O_o => {});
     return;
 }
 
 module.exports.help = {
-    name: `avatar`,
-    desc: `\`${config.prefix}help avatar\` - Get a users avatar.`,
-    category: `fun`
+    name: "avatar",
+    usage: "<user>",
+    category: "general",
+    description: "Get a user's avatar"
 }

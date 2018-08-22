@@ -1,41 +1,37 @@
-const moment = module.require(`moment-timezone`);
-const config = module.require(`../config.json`);
-const Discord = module.require(`discord.js`);
+const Discord = module.require("discord.js");
 
-module.exports.run = async (bot, message, args)  => {
-    if (message.guild.id != config.officialguildID) {
-        await message.channel.send(
-            new Discord.RichEmbed()
+module.exports.execute = async (bot, message, content, config, moment, request) => {
+    if (message.guild.id != config.officialGuildID) {
+        let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.notofficial}**`)
-        );
+            .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
+        await message.channel.send(errorEmbed).catch(O_o => {});
         return;
     }
 
-    if (args.length > 0) {
-        let msg = args.join(` `);
-        message.delete();
-        await bot.channels.get(`${config.bugchannelID}`).send(
-            new Discord.RichEmbed()
+    if (content.length < 1) {
+        let usageEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorInfo}`)
-            .setDescription(`**Bug Report:** \`${msg}\`\n**By:** <@${message.author.id}>`)
-            .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-        )
-        console.log(args);
-    } else {
-        await message.channel.send(
-            new Discord.RichEmbed()
-            .setColor(`#${config.colorDanger}`)
-            .setTitle(`Correct usage for '${config.prefix}${this.help.name}' command.`)
-            .setDescription(`${config.prefix}${this.help.name} <report content> - Submit a bug report.`)
-            .setFooter(`${config.prefix}help <${this.help.name}> • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-        );
+            .setTitle(`Correct usage for ${config.prefix}${this.help.name} command.`)
+            .setDescription(`\`${config.prefix}${this.help.name} ${this.help.usage}\`\n\n*${this.help.description}*`);
+        await message.channel.send(usageEmbed).catch(O_o => {});
+        return;
     }
+
+    let messageContent = content.join(' ').replace(/\s+/g, ' ');
+    let bugEmbed = new Discord.RichEmbed()
+        .setColor(`#${config.colorInfo}`)
+        .setAuthor(`Bug Report | ${message.author.tag}`, message.author.displayAvatarURL)
+        .addField("User", `<@${message.author.id}>`)
+        .addField("Bug", messageContent)
+        .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
+    await bot.channels.get(config.bugChannelID).send(bugEmbed).catch(O_o => {});
     return;
 }
 
 module.exports.help = {
-    name: `bug`,
-    desc: `\`${config.prefix}help bug\` - Report a bug.`,
-    category: `official`
+    name: "bug",
+    usage: "[report message]",
+    category: "official",
+    description: "Report a bug about the server."
 }

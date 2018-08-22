@@ -1,53 +1,49 @@
-const config = module.require("../config.json");
 const Discord = module.require("discord.js");
-const moment = module.require("moment-timezone");
 
-module.exports.run = async (bot, message, args)  => {
-    if (message.guild.id != config.officialguildID) {
-        await message.channel.send(
-            new Discord.RichEmbed()
+module.exports.execute = async (bot, message, content, config, moment, request) => {
+    if (message.guild.id != config.officialGuildID) {
+        let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.notofficial}**`)
-        );
+            .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
+        await message.channel.send(errorEmbed).catch(O_o => {});
         return;
     }
-
-    if (!message.member.roles.some(r => [`Owner`, `Server Adviser`, `Sponsor`, `Developer`, `Admin`, `Senior Moderator`].includes(r.name))) {
-        await message.channel.send(
-            new Discord.RichEmbed()
+    if (!message.member.roles.some(role => ["Owner", "Server Adviser", "Sponsor", "Developer", "Admin", "Senior Moderator"].includes(role.name))) {
+        let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.nopermission}**`)
-        );
+            .setDescription(`**<@${message.author.id}>, ${config.noPermission}**`);
+        await message.channel.send(errorEmbed).catch(O_o => {});
         return;
     }
-    
-    let msg = args.join(` `);
-    if (msg.length < 1) {			
-        await message.author.send(
-            new Discord.RichEmbed()
-            .setColor(`#${config.colorDanger}`)
-            .setTitle(`Cannot announce nothing!`)
-        );
-        return;
+    let helpName = this.help.name;
+    let helpUsage = this.help.usage;
+    let helpDescription = this.help.description;
+    let messageContent = content.join(' ');
+    if (messageContent.length < 1) {
+        let usageEmbed = new Discord.RichEmbed()
+            .setColor(`#${config.colorInfo}`)
+            .setTitle(`Correct usage for ${config.prefix}${helpName} command.`)
+            .setDescription(`\`${config.prefix}${helpName} ${helpUsage}\` - *${helpDescription}*`);
+        await message.channel.send(usageEmbed).catch(O_o => {});
     }
 
-    let bc = `@everyone\n`;
-        bc += `Greetings, MCPZ Crafters!\n\n`;
-        bc += `${msg}\n\n`;
-        bc += `- MCPZ Staff Team`;
-    await bot.channels.get(`${config.bcchannelID}`).send(bc).catch(err => console.log(err));
-    await bot.channels.get(`${config.logchannelID}`).send(
-        new Discord.RichEmbed()
-        .setColor(`#${config.colorInfo}`)
+    let broadcastFormat = "@everyone\n";
+        broadcastFormat += "Greetings, MCPZ Crafters!\n\n";
+        broadcastFormat += `${messageContent}\n\n`;
+        broadcastFormat += "- MCPZ Staff Team";
+    let logEmbed = new Discord.RichEmbed()
+        .setColor(`#${fileConfig.colorDanger}`)
         .setAuthor(message.author.tag, message.author.displayAvatarURL)
-        .setDescription(`**Announced by <@${message.author.id}>**\n${msg}`)
-        .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-    ).catch(err => console.log(err));
+        .setDescription(`**Announced by <@${message.author.id}>\n${messageContent}`)
+        .setFooter(`ID: ${message.author.id} •  ${Moment.tz(message.createdTimestamp, fileConfig.timezone).format(fileConfig.timeFormat)}`);
+    await bot.channel.get(fileConfig.broadcastChannelID).send(broadcastFormat).catch(O_o => {});
+    await bot.channel.get(fileConfig.logChannelID).send(logEmbed).catch(O_o => {});
     return;
 }
 
 module.exports.help = {
-    name: `broadcast`,
-    desc: `- Post an announcement.`,
-    category: `official`
+    name: "broadcast",
+    usage: "[message]",
+    category: "official",
+    description: "Post an announcement."
 }

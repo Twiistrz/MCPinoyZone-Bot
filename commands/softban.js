@@ -1,7 +1,7 @@
 const Discord = module.require("discord.js");
 
 module.exports.execute = async (bot, message, content, config, moment, request) => {
-    if (!message.member.hasPermission("KICK_MEMBERS")) {
+    if (!message.member.hasPermission("BAN_MEMBERS")) {
         let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
             .setDescription(`**<@${message.author.id}>, ${config.noPermission}**`)
@@ -14,21 +14,22 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
     let helpDescription = this.help.description;
     try {
         let member = message.mentions.members.first() || message.guild.members.get(content[0]);
-        if (!member.kickable) {
+        if (!member.bannable) {
             let errorEmbed = new Discord.RichEmbed()
                 .setColor(`#${config.colorDanger}`)
-                .setDescription(`**<@${message.author.id}>, I can't kick this user! Do they have a higher role?**`)
+                .setDescription(`**<@${message.author.id}>, I can't ban this user! Do they have a higher role?**`)
             await message.channel.send(errorEmbed);
             return;
         }
 
         let reason = content.slice(1).join(' ');
-        if (!reason) reason = "Not following our rules!";
+        if (!reason) reason = "The Ban hammer has spoken!";
         await message.delete().catch(O_o => {});
-        await member.kick(reason).catch(O_o => {});
+        await member.ban({days: 7, reason: reason}).catch(O_o => {});
+        await member.unban().catch(O_o => {});
         let logEmbed = new Discord.RichEmbed()
                 .setColor(`#${config.colorInfo}`)
-                .setAuthor(`Kicked | ${member.user.tag}`, bot.user.displayAvatarURL)
+                .setAuthor(`Soft Banned | ${member.user.tag}`, bot.user.displayAvatarURL)
                 .setThumbnail(bot.user.displayAvatarURL)
                 .addField("User", member.user.tag, true)
                 .addField("Staff Member", message.author.tag, true)
@@ -50,8 +51,8 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
 }
 
 module.exports.help = {
-    name: "kick",
+    name: "softban",
     usage: "[user/user id] <reason>",
     category: "admin",
-    description: "Kick a user."
+    description: "SoftBan a user."
 }

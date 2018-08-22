@@ -1,41 +1,48 @@
-const moment = module.require(`moment-timezone`);
-const config = module.require(`../config.json`);
-const Discord = module.require(`discord.js`);
+const Discord = module.require("discord.js");
 
-module.exports.run = async (bot, message, args)  => {
-    if (message.guild.id != config.officialguildID) {
-        await message.channel.send(
-            new Discord.RichEmbed()
+module.exports.execute = async (bot, message, content, config, moment, request) => {
+    if (message.guild.id != config.officialGuildID) {
+        let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.notofficial}**`)
-        );
+            .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
+        await message.channel.send(errorEmbed).catch(O_o => {});
         return;
     }
 
     if (message.author.id != config.creatorID) {
-        await message.channel.send(
-            new Discord.RichEmbed()
+        let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
-            .setTitle("Sorry, you're not my creator!")
-        );
+            .setDescription(`**<@${message.author.id}>, ${config.noPermission}**`);
+        await message.channel.send(errorEmbed).catch(O_o => {});
         return;
     }
 
-    message.delete();
-    let msg = args.slice(1).join(` `);
-    let reportby = args[0];
-    await message.channel.send(
-        new Discord.RichEmbed()
+    if (content.length < 2) {
+        let usageEmbed = new Discord.RichEmbed()
+            .setColor(`#${config.colorInfo}`)
+            .setTitle(`Correct usage for ${config.prefix}${this.help.name} command.`)
+            .setDescription(`\`${config.prefix}${this.help.name} ${this.help.usage}\` - *${this.help.description}*`);
+        await message.channel.send(usageEmbed).catch(O_o => {});
+        return;
+    }
+
+    await message.delete().catch(O_o => {});
+    let messageContent = content.slice(1).join(' ').replace(/\s+/g, ' ');
+    let reportedBy = content[0];
+    let fixedEmbed = new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
-        .setAuthor(message.author.tag, message.author.displayAvatarURL)
-        .setDescription(`**Fixed:** \`${msg}\`\n**Report by:** ${reportby}`)
-        .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeformat)}`)
-    )
+        .setAuthor(`Bug Fixed | ${message.author.tag}`, message.author.displayAvatarURL)
+        .addField("User", reportedBy, true)
+        .addField("Staff Member", message.author.tag, true)
+        .addField("Bug", messageContent)
+        .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
+    await bot.channels.get(config.bugChannelID).send(fixedEmbed).catch(O_o => {});
     return;
 }
 
 module.exports.help = {
-    name: `fixed`,
-    desc: `- Display fixed bug message.`,
-    category: `official`
+    name: "fixed",
+    usage: "[report by] [report content]",
+    category: "official",
+    description: "Send a bug fixed message."
 }
