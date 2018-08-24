@@ -35,7 +35,7 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         return;
     }
 
-    await bot.channel.get(config.broadcastChannelID).send(broadcastFormat).catch(O_o => {});
+    await bot.channel.get(config.broadcastChannelID).send(bcFormat).catch(O_o => {});
     await bot.channel.get(config.logChannelID).send(logEmbed).catch(O_o => {});
     return;
 }
