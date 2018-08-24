@@ -27,7 +27,7 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
     let logEmbed = new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
         .setAuthor(message.author.tag, message.author.displayAvatarURL)
-        .setDescription(`**Announced by <@${message.author.id}>\n${messageContent}`)
+        .setDescription(`**Announced by** <@${message.author.id}>\n${messageContent}`)
         .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
     
     if (content.length < 1) {
@@ -35,8 +35,8 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         return;
     }
 
-    await bot.channel.get(config.broadcastChannelID).send(bcFormat).catch(O_o => {});
-    await bot.channel.get(config.logChannelID).send(logEmbed).catch(O_o => {});
+    await bot.channels.get(config.broadcastChannelID).send(bcFormat).catch(O_o => {});
+    await bot.channels.get(config.logChannelID).send(logEmbed).catch(O_o => {});
     return;
 }
 
