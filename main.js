@@ -50,12 +50,14 @@ bot.on("messageUpdate", async (oldMessage, newMessage) => {
 });
 
 bot.on("message", async (message) => {
+    if (message.author.bot) return;
+
     if (swearWords.some(word => message.content.includes(word))) {
         await message.delete().catch(O_o => {});
         return;
     }
 
-    if (!message.content.startsWith(fileConfig.prefix) || message.author.bot || message.channel.type === "dm") return;
+    if (!message.content.startsWith(fileConfig.prefix) || message.channel.type === "dm") return;
     const content = message.content.slice(fileConfig.prefix.length).split(' ');
     const command = bot.commands.get(content[0].toLowerCase());
     if (command) command.execute(bot, message, content.slice(1), fileConfig, Moment, Request);

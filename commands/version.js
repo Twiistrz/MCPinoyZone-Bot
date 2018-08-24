@@ -33,5 +33,5 @@ module.exports.help = {
     name: "version",
     usage: false,
     category: "official",
-    description: "Check supported version"
+    description: "Check supported version."
 }

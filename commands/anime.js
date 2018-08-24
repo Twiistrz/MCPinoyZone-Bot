@@ -1,5 +1,6 @@
 const Discord = module.require("discord.js");
 const Kaori = module.require("kaori");
+const fileConfig = module.require("../config.json");
 const noNSFW = [198684730978336769];
 const sites = [`safebooru`,`lolibooru`,`danbooru`,`konachan`,`yandere`,`gelbooru`,`rule34`,`tbib`,`xbooru`,`youhateus`]
 const kaori = new Kaori();
@@ -122,7 +123,7 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
 
 module.exports.help = {
     name: "anime",
-    usage: "<site|tag> <tag>",
+    usage: ["<tag>","[site] <tag>"],
     category: "general",
-    description: "Send random anime picture."
+    description: `Send random anime picture.`
 }

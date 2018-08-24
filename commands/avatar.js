@@ -34,7 +34,7 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
 
 module.exports.help = {
     name: "avatar",
-    usage: "<user>",
+    usage: ["<@user>"],
     category: "general",
-    description: "Get a user's avatar"
+    description: "Display your avatar if left blank or another @user's avatar."
 }

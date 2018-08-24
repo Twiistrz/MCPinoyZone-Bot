@@ -8,6 +8,7 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         await message.channel.send(errorEmbed).catch(O_o => {});
         return;
     }
+
     if (!message.member.roles.some(role => ["Owner", "Server Adviser", "Sponsor", "Developer", "Admin", "Senior Moderator"].includes(role.name))) {
         let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
@@ -15,35 +16,33 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         await message.channel.send(errorEmbed).catch(O_o => {});
         return;
     }
-    let helpName = this.help.name;
-    let helpUsage = this.help.usage;
-    let helpDescription = this.help.description;
-    let messageContent = content.join(' ');
-    if (messageContent.length < 1) {
-        let usageEmbed = new Discord.RichEmbed()
-            .setColor(`#${config.colorInfo}`)
-            .setTitle(`Correct usage for ${config.prefix}${helpName} command.`)
-            .setDescription(`\`${config.prefix}${helpName} ${helpUsage}\` - *${helpDescription}*`);
-        await message.channel.send(usageEmbed).catch(O_o => {});
-    }
 
-    let broadcastFormat = "@everyone\n";
-        broadcastFormat += "Greetings, MCPZ Crafters!\n\n";
-        broadcastFormat += `${messageContent}\n\n`;
-        broadcastFormat += "- MCPZ Staff Team";
+    let messageContent = content.join(' ');
+    let usage = `\`${config.prefix}${this.help.name}\` \`${this.help.description}\`\n`;
+        usage += `**Usage:** ${config.prefix}${this.help.name} ${this.help.usage.join(' | ')}`;
+    let bcFormat = "@everyone\n";
+        bcFormat += "Greetings, MCPZ Crafters!\n\n";
+        bcFormat += `${messageContent}\n\n`;
+        bcFormat += "Sincerely,\nMCPZ Staff Team";
     let logEmbed = new Discord.RichEmbed()
-        .setColor(`#${fileConfig.colorDanger}`)
+        .setColor(`#${config.colorInfo}`)
         .setAuthor(message.author.tag, message.author.displayAvatarURL)
         .setDescription(`**Announced by <@${message.author.id}>\n${messageContent}`)
-        .setFooter(`ID: ${message.author.id} •  ${Moment.tz(message.createdTimestamp, fileConfig.timezone).format(fileConfig.timeFormat)}`);
-    await bot.channel.get(fileConfig.broadcastChannelID).send(broadcastFormat).catch(O_o => {});
-    await bot.channel.get(fileConfig.logChannelID).send(logEmbed).catch(O_o => {});
+        .setFooter(`ID: ${message.author.id} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
+    
+    if (content.length < 1) {
+        await message.channel.send(usage).catch(O_o => {});
+        return;
+    }
+
+    await bot.channel.get(config.broadcastChannelID).send(broadcastFormat).catch(O_o => {});
+    await bot.channel.get(config.logChannelID).send(logEmbed).catch(O_o => {});
     return;
 }
 
 module.exports.help = {
     name: "broadcast",
-    usage: "[message]",
+    usage: ["[message]"],
     category: "official",
     description: "Post an announcement."
 }

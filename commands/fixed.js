@@ -42,7 +42,7 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
 
 module.exports.help = {
     name: "fixed",
-    usage: "[report by] [report content]",
+    usage: ["[report by] [report content]"],
     category: "official",
     description: "Send a bug fixed message."
 }
