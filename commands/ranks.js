@@ -23,16 +23,9 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         .setDescription(`\`${config.prefix}${this.help.name} ${this.help.usage}\` - *${this.help.description}*`);
     let ranksEmbed = new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
-        .setDescription(`**In-Game Rankup**\n**Servant** » Default\n**Peasant** » $650k\n**Squire** » $1.5M\n**Knight** » $3.5M\n**Noble** » $7M\n**Regent** » $15M\n**Warlord** » $25M\n\n**Permanent Ranks (Donator)**\n**Champion** » 9.99 USD\n**Legend** » 14.99 USD\n**Emperor** » 34.99 USD`);
+        .setDescription(`**In-Game Rankup**\n**Servant** » Default\n**Peasant** » $65k\n**Squire** » $150K\n**Knight** » $350K\n**Noble** » $700K\n**Regent** » $1.5M\n**Warlord** » $2.5M\n\n**Monthly Ranks (Donator)**\n**Champion** » 3.99 USD (200.00 PHP)\n**Legend** » 5.99 USD (320.00 PHP)\n**Emperor** » 11.99 USD (640.00 PHP)\n\n**Permanent Ranks (Donator)**\n**Champion** » 9.99 USD (530.00 PHP)\n**Legend** » 14.99 USD (800.00 PHP)\n**Emperor** » 34.99 USD (1,870.00 PHP)\n\n# PHP only applies if using PayMaya.\n# PayMaya transactions might get delayed on receiving due to validating the payment.`);
 
-    if (message.guild.id != config.officialGuildID) {
-        let errorEmbed = new Discord.RichEmbed()
-            .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
-        await message.channel.send(errorEmbed).catch(O_o => {});
-        return;
-    }
-
+    if (message.guild.id != config.officialGuildID) return message.channel.send(errorEmbed).catch(O_o => {});
     if (content[0]) {
         let rankFound = false;
         let rank = content[0].toLowerCase();
@@ -42,19 +35,12 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
                 let ranksPermEmbed = new Discord.RichEmbed()
                     .setColor(`#${config.colorInfo}`)
                     .setDescription(`**${rank.replace(/^\w/, c => c.toUpperCase())} Commands/Permissions**\n${ranksPerm[i]}`);
-                await message.channel.send(ranksPermEmbed).catch(O_o => {});
-                return;
+                return message.channel.send(ranksPermEmbed).catch(O_o => {});
             }
         }
-
-        if (!rankFound) {
-            await message.channel.send(usageEmbed).catch(O_o => {});
-            return;
-        }
+        if (!rankFound) return message.channel.send(usageEmbed).catch(O_o => {});
     }
-
-    await message.channel.send(ranksEmbed).catch(O_o => {});
-    return;
+    return message.channel.send(ranksEmbed).catch(O_o => {});
 }
 
 module.exports.help = {

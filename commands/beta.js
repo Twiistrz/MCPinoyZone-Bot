@@ -1,14 +1,11 @@
 const Discord = module.require("discord.js");
 
 module.exports.execute = async (bot, message, content, config, moment, request) => {
-    if (message.guild.id != config.officialGuildID) {
-        let errorEmbed = new Discord.RichEmbed()
-            .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
-        await message.channel.send(errorEmbed).catch(O_o => {});
-        return;
-    }
+    let errorEmbed = new Discord.RichEmbed()
+        .setColor(`#${config.colorDanger}`)
+        .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
 
+    if (message.guild.id != config.officialGuildID) return message.channel.send(errorEmbed).catch(O_o => {});
     const betaList = message.guild.roles.get("478820384720814100").members.map(member => member.user.tag);
     const betaTesters = [];
     for (const member of betaList) betaTesters.push(member);

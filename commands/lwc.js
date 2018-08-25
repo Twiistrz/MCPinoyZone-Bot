@@ -27,11 +27,11 @@ const usage = [
     "Change protection flags."
 ];
 module.exports.execute = async (bot, message, content, config, moment, request) => {
+    var cmdUsage;
     let errorEmbed = new Discord.RichEmbed()
         .setColor(`#${config.colorDanger}`)
         .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
 
-    let cmdUsage = "";
     for (let i = 0; i < commands.length; i++) {
         cmdUsage += `\`/${commands[i]}\` - *${usage[i]}*`;
         if (i != commands.length - 1) cmdUsage += `\n`;
@@ -41,7 +41,7 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         .setColor(`#${config.colorInfo}`)
         .setThumbnail(`https://www.spigotmc.org/data/resource_icons/2/2162.jpg?1428689943`)
         .setDescription(`${description}\n\n**Commands**\n${cmdUsage}\n\n**Flags**\nMagnet, Redstone, Auto Close, Hopper`);
-    
+
     if (message.guild.id != config.officialGuildID) {
         await message.channel.send(errorEmbed).catch(O_o => {});
         return;

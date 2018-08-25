@@ -1,14 +1,9 @@
 const Discord = module.require("discord.js");
 
 module.exports.execute = async (bot, message, content, config, moment, request) => {
-    if (message.guild.id != config.officialGuildID) {
-        let errorEmbed = new Discord.RichEmbed()
-            .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
-        await message.channel.send(errorEmbed).catch(O_o => {});
-        return;
-    }
-
+    let errorEmbed = new Discord.RichEmbed()
+        .setColor(`#${config.colorDanger}`)
+        .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
     let aboutEmbed = new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
         .setAuthor("About MCPinoyZone Server")
@@ -19,8 +14,8 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         .addField("Founder", "Shinnex", true)
         .addField("Owner", `<@${config.creatorID}>`, true)
         .setFooter(`${config.prefix}${this.help.name} • © 2013 - 2018 MCPinoyZone`);
-    await message.channel.send(aboutEmbed).catch(O_o => {});
-    return;
+    if (message.guild.id != config.officialGuildID) return message.channel.send(errorEmbed).catch(O_o => {});
+    return message.channel.send(aboutEmbed).catch(O_o => {});
 }
 
 module.exports.help = {

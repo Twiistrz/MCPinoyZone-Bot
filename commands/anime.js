@@ -7,14 +7,11 @@ const kaori = new Kaori();
 
 module.exports.execute = async (bot, message, content, config, moment, request) => {
     if (message.author.id === 198684730978336769) return;
-    let helpName = this.help.name;
-    let helpUsage = this.help.usage;
-    let helpDescription = this.help.description;
     if (message.guild.id === config.officialGuildID && message.channel.id != config.nsfwChannelID && message.channel.id != config.testChannelID) {
         let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
             .setDescription(`Use this command in <#${config.nsfwChannelID}>`)
-            .setFooter(`${config.prefix}${helpName} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
+            .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
         await message.author.send(errorEmbed).catch(O_o => {});
         return;
     }
@@ -53,18 +50,14 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
                     .setColor(`#${color}`)
                     .setTitle(`${site.replace(/^\w/, c => c.toUpperCase())} • ${rating}${(tag) ? ` • ${tag}` : ''}`)
                     .setImage(image[0].common.fileURL)
-                    .setFooter(`${config.prefix}${helpName} [${site}]${(tag) ? ' <' + tag + '>' : ''} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
-                await message.channel.send(animeEmbed)
-                .then(() => searching.delete())
-                .catch(O_o => {});
+                    .setFooter(`${config.prefix}${this.help.name} [${site}]${(tag) ? ' <' + tag + '>' : ''} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
+                await message.channel.send(animeEmbed).then(() => searching.delete()).catch(O_o => {});
             }).catch(async () => {
                 let errorEmbed = new Discord.RichEmbed()
                     .setColor(`#${config.colorDanger}`)
                     .setDescription(`**${tag} can't be found in ${site}.**`)
-                    .setFooter(`${config.prefix}${helpName} ${(tag) ? ' <' + tag + '>' : ''} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`)
-                await message.channel.send(errorEmbed)
-                .then(() => searching.delete())
-                .catch(O_o => {});                
+                    .setFooter(`${config.prefix}${this.help.name} ${(tag) ? ' <' + tag + '>' : ''} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`)
+                await message.channel.send(errorEmbed).then(() => searching.delete()).catch(O_o => {});                
             });
             return;
         }
@@ -101,10 +94,8 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
                     .setColor(`#${color}`)
                     .setTitle(`${sites[i].replace(/^\w/, c => c.toUpperCase())} • ${rating}${(tag) ? ` • ${tag}` : ''}`)
                     .setImage(image[0].common.fileURL)
-                    .setFooter(`${config.prefix}${helpName} ${(tag) ? ' <' + tag + '>' : ''} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
-                await message.channel.send(animeEmbed)
-                .then(() => searching.delete())
-                .catch(O_o => {});
+                    .setFooter(`${config.prefix}${this.help.name} ${(tag) ? ' <' + tag + '>' : ''} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
+                await message.channel.send(animeEmbed).then(() => searching.delete()).catch(O_o => {});
             }
         }).catch(O_o => {});
     }
@@ -113,10 +104,8 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         let errorEmbed = new Discord.RichEmbed()
             .setColor(`#${config.colorDanger}`)
             .setDescription(`**${tag} can't be found in any sites.**`)
-            .setFooter(`${config.prefix}${helpName} ${(tag) ? ' <' + tag + '>' : ''} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`)
-        await message.channel.send(errorEmbed)
-        .then(() => searching.delete())
-        .catch(O_o => {});    
+            .setFooter(`${config.prefix}${this.help.name} ${(tag) ? ' <' + tag + '>' : ''} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`)
+        await message.channel.send(errorEmbed).then(() => searching.delete()).catch(O_o => {});    
     }
     return;
 }

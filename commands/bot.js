@@ -28,8 +28,7 @@ module.exports.execute = async (bot, message, content, config, moment, request) 
         .addField("Bot Version", pckg.version, true)
         .addField("Uptime", `${hours} ${(hours > 1 || hours == 0) ? `hrs` : `hr`}, ${minutes} ${(minutes > 1 || minutes == 0) ? `mins` : `min`} and ${parseFloat(seconds).toFixed(0)} ${(seconds > 1 || seconds == 0) ? `secs` : `sec`}`)
         .setFooter(`${config.prefix}${this.help.name} • ${moment.tz(message.createdTimestamp, config.timezone).format(config.timeFormat)}`);
-    await message.channel.send(botEmbed).catch(O_o => {});
-    return;
+    return message.channel.send(botEmbed).catch(O_o => {});
 }
 
 module.exports.help = {

@@ -11,7 +11,7 @@
   "repository": {
     "url": "https://github.com/Twiistrz/MCPinoyZone-Bot"
   },
-  "author": "_Twiistrz#8016",
+  "author": "Twiistrz#8016",
   "license": "MIT",
   "keywords": [
     "discord",
@@ -27,7 +27,6 @@
     "kaori": "^1.1.4",
     "libsodium-wrappers": "^0.7.3",
     "moment-timezone": "^0.5.21",
-    "opusscript": "^0.0.6",
     "os": "^0.1.1",
     "request": "^2.88.0"
   }

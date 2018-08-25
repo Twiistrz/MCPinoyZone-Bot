@@ -1,23 +1,16 @@
 const Discord = module.require("discord.js");
 
 module.exports.execute = async (bot, message, content, config, moment, request) => {
-    if (message.guild.id != config.officialGuildID) {
-        let errorEmbed = new Discord.RichEmbed()
-            .setColor(`#${config.colorDanger}`)
-            .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
-        await message.channel.send(errorEmbed).catch(O_o => {});
-        return;
-    }
+    let errorEmbed = new Discord.RichEmbed()
+        .setColor(`#${config.colorDanger}`)
+        .setDescription(`**<@${message.author.id}>, ${config.notOfficial}**`);
+    let usageEmbed = new Discord.RichEmbed()
+        .setColor(`#${config.colorInfo}`)
+        .setTitle(`Correct usage for ${config.prefix}${this.help.name} command.`)
+        .setDescription(`\`${config.prefix}${this.help.name} ${this.help.usage}\`\n\n*${this.help.description}*`);
 
-    if (content.length < 1) {
-        let usageEmbed = new Discord.RichEmbed()
-            .setColor(`#${config.colorInfo}`)
-            .setTitle(`Correct usage for ${config.prefix}${this.help.name} command.`)
-            .setDescription(`\`${config.prefix}${this.help.name} ${this.help.usage}\`\n\n*${this.help.description}*`);
-        await message.channel.send(usageEmbed).catch(O_o => {});
-        return;
-    }
-
+    if (message.guild.id != config.officialGuildID) return message.channel.send(errorEmbed).catch(O_o => {});
+    if (content.length < 1) return message.channel.send(usageEmbed).catch(O_o => {});
     let messageContent = content.join(' ').replace(/\s+/g, ' ');
     let bugEmbed = new Discord.RichEmbed()
         .setColor(`#${config.colorInfo}`)
